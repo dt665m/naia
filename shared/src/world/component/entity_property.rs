@@ -106,13 +106,11 @@ impl EntityProperty {
     // Comparison
 
     pub fn equals(&self, other: &EntityProperty) -> bool {
-        if let Some(handle) = *self.handle_prop {
-            if let Some(other_handle) = *other.handle_prop {
-                return handle == other_handle;
-            }
-            return false;
+        match (*self.handle_prop, *other.handle_prop) {
+            (Some(handle), Some(other_handle)) => handle == other_handle,
+            (None, None) => true,
+            _ => false,
         }
-        other.handle_prop.is_none()
     }
 
     // Internal
@@ -136,5 +134,11 @@ impl EntityProperty {
         } else {
             panic!("Could not find Entity, in order to set the EntityProperty value!")
         }
+    }
+}
+
+impl PartialEq for EntityProperty {
+    fn eq(&self, other: &Self) -> bool {
+        self.equals(other)
     }
 }
